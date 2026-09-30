@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SearchDocument {
+  id              String   @id @default(cuid())
+  documentId      String   @unique
+  entityType      String
+  module          String
+  title           String
+  subtitle        String?
+  keywordsJson    String?
+  tagsJson        String?
+  geoJson         String?
+  status          String   @default("active")
+  visibility      String   @default("public")
+  engagementScore Float    @default(0)
+  freshnessScore  Float    @default(0)
+  trustScore      Float    @default(0)
+  actionTarget    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SearchQueryLog {
+  id           String   @id @default(cuid())
+  queryText    String
+  userId       String?
+  intentClass  String?
+  resultCount  Int      @default(0)
+  zeroResults  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model SearchClickLog {
+  id           String   @id @default(cuid())
+  queryText    String
+  documentId   String
+  userId       String?
+  createdAt    DateTime @default(now())
+}
+
+model SearchSuggestion {
+  id             String   @id @default(cuid())
+  suggestionText String
+  sourceType     String
+  weight         Int      @default(1)
+  createdAt      DateTime @default(now())
+}
